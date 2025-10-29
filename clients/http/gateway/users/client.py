@@ -1,6 +1,29 @@
+import time
+
 from clients.http.client import HTTPClient
-from httpx import Response, Client
+from httpx import Response, request
 from typing import TypedDict
+
+from clients.http.gateway.client import build_gateway_client
+
+
+class UserDict(TypedDict):
+    """
+    Описание структуры пользователя
+    """
+    id: str
+    email: str
+    lastName: str
+    firstName: str
+    middleName: str
+    phoneNumber: str
+
+
+class GetUserResponseDict(TypedDict):
+    """
+    Описание структуры ответа получения данных пользователя
+    """
+    user: UserDict
 
 
 class CreateUserRequestDict(TypedDict):
@@ -12,6 +35,13 @@ class CreateUserRequestDict(TypedDict):
     firstName: str
     middleName: str
     phoneNumber: str
+
+
+class CreateUserResponseDict(TypedDict):
+    """
+    Описание структуры ответа создания пользователя
+    """
+    user: UserDict
 
 
 class UsersGatewayHTTPClient(HTTPClient):
@@ -37,5 +67,26 @@ class UsersGatewayHTTPClient(HTTPClient):
         """
         return self.post("/api/v1/users", json=request)
 
+    def get_user(self, user_id: str) -> GetUserResponseDict:
+        response = self.get_user_api(user_id)
+        return response.json()
 
-users_client = UsersGatewayHTTPClient(client=Client(base_url="http://localhost:8003"))
+    def create_user(self) -> CreateUserResponseDict:
+        request = CreateUserRequestDict(
+            email=f"user.{time.time()}@example.com",
+            lastName="string",
+            firstName="string",
+            middleName="string",
+            phoneNumber="string",
+        )
+        response = self.create_user_api(request)
+        return response.json()
+
+
+def build_users_gateway_http_client() -> UsersGatewayHTTPClient:
+    """
+    Функция создает экземпляр UsersGatewayHTTPClient с уже настроенным HTTP-клиентом.
+
+    :return: Готовый к использованию UsersGatewayHTTPClient.
+    """
+    return UsersGatewayHTTPClient(client=build_gateway_client())

@@ -1,6 +1,8 @@
 from clients.http.client import HTTPClient
-from httpx import Response, Client, QueryParams
+from httpx import Response, QueryParams
 from typing import TypedDict
+
+from clients.http.gateway.client import build_gateway_client
 
 
 class GetOperationsQueryDict(TypedDict):
@@ -193,4 +195,12 @@ class OperationsGatewayHTTPClient(HTTPClient):
         return self.post("/api/v1/operations/make-cash-withdrawal-operation", json=request)
 
 
-operations_client = OperationsGatewayHTTPClient(client=Client(base_url="http://localhost:8003"))
+
+
+def build_operations_gateway_http_client() -> OperationsGatewayHTTPClient:
+    """
+    Функция создает экземпляр OperationsGatewayHTTPClient с уже настроенным HTTP-клиентом.
+
+    :return: Готовый к использованию OperationsGatewayHTTPClient.
+    """
+    return OperationsGatewayHTTPClient(client=build_gateway_client())
