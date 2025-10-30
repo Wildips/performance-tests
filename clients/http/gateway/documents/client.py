@@ -1,7 +1,39 @@
+from typing import TypedDict
+
 from clients.http.client import HTTPClient
 from httpx import Response
 
 from clients.http.gateway.client import build_gateway_client
+
+
+class TariffDict(TypedDict):
+    """
+    Структура данных для перечня документов по тарифу
+    """
+    url: str
+    document: str
+
+
+class GetTariffDocumentResponseDict(TypedDict):
+    """
+    Описание структуры ответа получения информации по тарифу
+    """
+    tariff: TariffDict
+
+
+class ContractDict(TypedDict):
+    """
+    Структура данных для перечня документов по контракту
+    """
+    url: str
+    document: str
+
+
+class GetContraktDocumentResponseDict(TypedDict):
+    """
+    Описание структуры ответа получения информации по контракту
+    """
+    contract: ContractDict
 
 
 class DocumentsGatewayHTTPClient(HTTPClient):
@@ -26,6 +58,14 @@ class DocumentsGatewayHTTPClient(HTTPClient):
         :return: Ответ от сервера (объект httpx.Response) с результатом операции
         """
         return self.get(f"/api/v1/documents/contract-document/{account_id}")
+
+    def get_tariff_document(self, account_id: str) -> GetTariffDocumentResponseDict:
+        response = self.get_tariff_document_api(account_id)
+        return response.json()
+
+    def get_contract_document(self, account_id: str) -> GetContraktDocumentResponseDict:
+        response = self.get_contract_document_api(account_id)
+        return response.json()
 
 
 def build_documents_gateway_http_client() -> DocumentsGatewayHTTPClient:
