@@ -1,47 +1,18 @@
 import time
 
 from clients.http.client import HTTPClient
-from httpx import Response, request
+from httpx import Response
 from typing import TypedDict
 
 from clients.http.gateway.client import build_gateway_client
-
-
-class UserDict(TypedDict):
-    """
-    Описание структуры пользователя
-    """
-    id: str
-    email: str
-    lastName: str
-    firstName: str
-    middleName: str
-    phoneNumber: str
-
-
-class GetUserResponseDict(TypedDict):
-    """
-    Описание структуры ответа получения данных пользователя
-    """
-    user: UserDict
-
-
-class CreateUserRequestDict(TypedDict):
-    """
-    Структура данных для создания нового пользователя
-    """
-    email: str
-    lastName: str
-    firstName: str
-    middleName: str
-    phoneNumber: str
+from pydantic_create_user import UserSchema, GetUserResponseSchema, CreateUserRequestSchema
 
 
 class CreateUserResponseDict(TypedDict):
     """
     Описание структуры ответа создания пользователя
     """
-    user: UserDict
+    user: UserSchema
 
 
 class UsersGatewayHTTPClient(HTTPClient):
@@ -58,7 +29,7 @@ class UsersGatewayHTTPClient(HTTPClient):
         """
         return self.get(f"/api/v1/users/{user_id}")
 
-    def create_user_api(self, request: CreateUserRequestDict) -> Response:
+    def create_user_api(self, request: CreateUserRequestSchema) -> Response:
         """
         Создание нового пользователя
 
@@ -67,12 +38,12 @@ class UsersGatewayHTTPClient(HTTPClient):
         """
         return self.post("/api/v1/users", json=request)
 
-    def get_user(self, user_id: str) -> GetUserResponseDict:
+    def get_user(self, user_id: str) -> GetUserResponseSchema:
         response = self.get_user_api(user_id)
         return response.json()
 
     def create_user(self) -> CreateUserResponseDict:
-        request = CreateUserRequestDict(
+        request = CreateUserRequestSchema(
             email=f"user.{time.time()}@example.com",
             lastName="string",
             firstName="string",
