@@ -2,17 +2,9 @@ import time
 
 from clients.http.client import HTTPClient
 from httpx import Response
-from typing import TypedDict
 
 from clients.http.gateway.client import build_gateway_client
-from pydantic_create_user import UserSchema, GetUserResponseSchema, CreateUserRequestSchema
-
-
-class CreateUserResponseDict(TypedDict):
-    """
-    Описание структуры ответа создания пользователя
-    """
-    user: UserSchema
+from clients.http.gateway.users.schema import GetUserResponseSchema, CreateUserRequestSchema, CreateUserResponseSchema
 
 
 class UsersGatewayHTTPClient(HTTPClient):
@@ -36,22 +28,22 @@ class UsersGatewayHTTPClient(HTTPClient):
         :param request: Словарь с данными нового пользователя
         :return: Ответ от сервера (объект httpx.Response)
         """
-        return self.post("/api/v1/users", json=request)
+        return self.post("/api/v1/users", json=request.model_dump(by_alias=True))
 
     def get_user(self, user_id: str) -> GetUserResponseSchema:
         response = self.get_user_api(user_id)
-        return response.json()
+        return GetUserResponseSchema.model_validate_json(response.text)
 
-    def create_user(self) -> CreateUserResponseDict:
+    def create_user(self) -> CreateUserResponseSchema:
         request = CreateUserRequestSchema(
             email=f"user.{time.time()}@example.com",
-            lastName="string",
-            firstName="string",
-            middleName="string",
-            phoneNumber="string",
+            last_name="string",
+            first_name="string",
+            middle_name="string",
+            phone_number="string"
         )
         response = self.create_user_api(request)
-        return response.json()
+        return CreateUserResponseSchema.model_validate_json(response.text)
 
 
 def build_users_gateway_http_client() -> UsersGatewayHTTPClient:
