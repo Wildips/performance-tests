@@ -1,7 +1,7 @@
 from clients.http.client import HTTPClient
 from httpx import Response, QueryParams
 
-from clients.http.gateway.client import build_gateway_client
+from clients.http.gateway.client import build_gateway_http_client
 from clients.http.gateway.accounts.schema import (
     GetAccountsQuerySchema,
     OpenDepositAccountRequestSchema,
@@ -113,4 +113,4 @@ def build_accounts_gateway_http_client() -> AccountsGatewayHTTPClient:
 
     :return: Готовый к использованию AccountsGatewayHTTPClient.
     """
-    return AccountsGatewayHTTPClient(client=build_gateway_client())
+    return AccountsGatewayHTTPClient(client=build_gateway_http_client())

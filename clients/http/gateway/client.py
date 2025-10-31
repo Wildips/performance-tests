@@ -1,7 +1,7 @@
 from httpx import Client
 
 
-def build_gateway_client() -> Client:
+def build_gateway_http_client() -> Client:
     """
     Функция создает экземпляр httpx.Client с базовыми настройками для сервиса http-gateway.
     :return: Готовый к использованию объект httpx.Client

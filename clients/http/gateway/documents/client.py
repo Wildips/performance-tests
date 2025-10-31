@@ -1,7 +1,7 @@
 from clients.http.client import HTTPClient
 from httpx import Response
 
-from clients.http.gateway.client import build_gateway_client
+from clients.http.gateway.client import build_gateway_http_client
 from clients.http.gateway.documents.schema import GetTariffDocumentResponseSchema, GetContractDocumentResponseSchema
 
 
@@ -43,4 +43,4 @@ def build_documents_gateway_http_client() -> DocumentsGatewayHTTPClient:
 
     :return: Готовый к использованию DocumentsGatewayHTTPClient.
     """
-    return DocumentsGatewayHTTPClient(client=build_gateway_client())
+    return DocumentsGatewayHTTPClient(client=build_gateway_http_client())

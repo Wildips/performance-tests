@@ -1,7 +1,7 @@
 from clients.http.client import HTTPClient
 from httpx import Response, QueryParams
 
-from clients.http.gateway.client import build_gateway_client
+from clients.http.gateway.client import build_gateway_http_client
 from clients.http.gateway.operations.schema import (
     GetOperationReceiptResponseSchema,
     GetOperationsResponseSchema,
@@ -218,4 +218,4 @@ def build_operations_gateway_http_client() -> OperationsGatewayHTTPClient:
 
     :return: Готовый к использованию OperationsGatewayHTTPClient.
     """
-    return OperationsGatewayHTTPClient(client=build_gateway_client())
+    return OperationsGatewayHTTPClient(client=build_gateway_http_client())

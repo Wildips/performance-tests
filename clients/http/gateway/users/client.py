@@ -1,7 +1,7 @@
 from clients.http.client import HTTPClient
 from httpx import Response
 
-from clients.http.gateway.client import build_gateway_client
+from clients.http.gateway.client import build_gateway_http_client
 from clients.http.gateway.users.schema import GetUserResponseSchema, CreateUserRequestSchema, CreateUserResponseSchema
 
 
@@ -44,4 +44,4 @@ def build_users_gateway_http_client() -> UsersGatewayHTTPClient:
 
     :return: Готовый к использованию UsersGatewayHTTPClient.
     """
-    return UsersGatewayHTTPClient(client=build_gateway_client())
+    return UsersGatewayHTTPClient(client=build_gateway_http_client())

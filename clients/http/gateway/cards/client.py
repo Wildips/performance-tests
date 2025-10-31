@@ -7,7 +7,7 @@ from clients.http.gateway.cards.schema import (
     IssueVirtualCardResponseSchema,
     IssuePhysicalCardResponseSchema
 )
-from clients.http.gateway.client import build_gateway_client
+from clients.http.gateway.client import build_gateway_http_client
 
 
 class CardsGatewayHTTPClient(HTTPClient):
@@ -56,4 +56,4 @@ def build_cards_gateway_http_client() -> CardsGatewayHTTPClient:
 
     :return: Готовый к использованию CardsGatewayHTTPClient.
     """
-    return CardsGatewayHTTPClient(client=build_gateway_client())
+    return CardsGatewayHTTPClient(client=build_gateway_http_client())
