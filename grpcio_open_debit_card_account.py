@@ -11,9 +11,10 @@ from tools.fakers import fake
 
 channel = grpc.insecure_channel("localhost:9003")
 
-user_gateway_service = UsersGatewayServiceStub(channel)
+users_gateway_service = UsersGatewayServiceStub(channel)
+accounts_gateway_service = AccountsGatewayServiceStub(channel)
 
-create_user_request: CreateUserRequest = CreateUserRequest(
+create_user_request = CreateUserRequest(
     email=fake.email(),
     last_name=fake.last_name(),
     first_name=fake.first_name(),
@@ -21,15 +22,13 @@ create_user_request: CreateUserRequest = CreateUserRequest(
     phone_number=fake.phone_number(),
 )
 
-create_user_response: CreateUserResponse = user_gateway_service.CreateUser(create_user_request)
+create_user_response: CreateUserResponse = users_gateway_service.CreateUser(create_user_request)
 print("Create user response: ", create_user_response)
 
-account_gateway_service = AccountsGatewayServiceStub(channel)
-
-open_debit_account_request: OpenDebitCardAccountRequest = OpenDebitCardAccountRequest(
+open_debit_account_request = OpenDebitCardAccountRequest(
     user_id=create_user_response.user.id
 )
 
-open_debit_account_response: OpenDebitCardAccountResponse = account_gateway_service.OpenDebitCardAccount(
+open_debit_account_response: OpenDebitCardAccountResponse = accounts_gateway_service.OpenDebitCardAccount(
     open_debit_account_request)
 print("Open debit account response: ", open_debit_account_response)
