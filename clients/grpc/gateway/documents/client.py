@@ -11,7 +11,6 @@ from contracts.services.gateway.documents.rpc_get_contract_document_pb2 import (
     GetContractDocumentRequest,
     GetContractDocumentResponse
 )
-from tools.fakers import fake
 
 
 class DocumentsGatewayGRPCClient(GRPCClient):
