@@ -14,9 +14,9 @@ class GetUserScenarioUser(User):
 
     def on_start(self) -> None:
         self.user_gateway_client = build_users_gateway_locust_http_client(self.environment)
+        self.account_gateway_client = build_accounts_gateway_locust_http_client(self.environment)
         self.create_user_response = self.user_gateway_client.create_user()
 
     @task
     def open_debit_card_account(self):
-        self.account_gateway_client = build_accounts_gateway_locust_http_client(self.environment)
         self.account_gateway_client.open_debit_card_account(self.create_user_response.user.id)
