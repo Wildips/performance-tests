@@ -1,7 +1,8 @@
 from grpc import Channel
+from locust.env import Environment
 
 from clients.grpc.client import GRPCClient
-from clients.grpc.gateway.client import build_gateway_grpc_client
+from clients.grpc.gateway.client import build_gateway_grpc_client, build_gateway_locust_grpc_client
 from contracts.services.gateway.cards.cards_gateway_service_pb2_grpc import CardsGatewayServiceStub
 from contracts.services.gateway.cards.rpc_issue_physical_card_pb2 import (
     IssuePhysicalCardRequest,
@@ -79,3 +80,16 @@ def build_cards_gateway_grpc_client() -> CardsGatewayGRPCClient:
     :return: Инициализированный клиент для CardsGatewayService.
     """
     return CardsGatewayGRPCClient(channel=build_gateway_grpc_client())
+
+
+def build_cards_gateway_locust_grpc_client(environment: Environment) -> CardsGatewayGRPCClient:
+    """
+    Функция создает экземпляр CardsGatewayGRPCClient адаптированный под Locust.
+
+    Клиент автоматически собирает метрики и передает их в Locust через интерцептор.
+    Используется исключительно в нагрузочных тестах.
+
+    :param environment: объект окружения Locust.
+    :return:экземпляр CardsGatewayGRPCClient с интерцептором сбора метрик.
+    """
+    return CardsGatewayGRPCClient(channel=build_gateway_locust_grpc_client(environment))
