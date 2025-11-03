@@ -5,7 +5,7 @@ from clients.http.gateway.users.schema import CreateUserResponseSchema
 
 
 class GetUserScenarioUser(User):
-    http = "localhost"
+    host = "localhost"
     wait_time = between(1, 3)
     user_gateway_client: UsersGatewayHTTPClient
     create_user_response: CreateUserResponseSchema
