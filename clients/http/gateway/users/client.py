@@ -1,8 +1,12 @@
-from clients.http.client import HTTPClient
+from locust.env import Environment
 from httpx import Response
 
-from clients.http.gateway.client import build_gateway_http_client
-from clients.http.gateway.users.schema import GetUserResponseSchema, CreateUserRequestSchema, CreateUserResponseSchema
+from clients.http.client import HTTPClient, HTTPClientExtensions
+from clients.http.gateway.client import build_gateway_http_client, build_gateway_locust_http_client
+from clients.http.gateway.users.schema import (
+    GetUserResponseSchema,
+    CreateUserRequestSchema,
+    CreateUserResponseSchema)
 
 
 class UsersGatewayHTTPClient(HTTPClient):
@@ -17,7 +21,10 @@ class UsersGatewayHTTPClient(HTTPClient):
         :param user_id: Идентификатор пользователя
         :return: Ответ от сервера (объект httpx.Response)
         """
-        return self.get(f"/api/v1/users/{user_id}")
+        return self.get(
+            f"/api/v1/users/{user_id}",
+            extensions=HTTPClientExtensions(route="/api/v1/users/{user_id}")
+        )
 
     def create_user_api(self, request: CreateUserRequestSchema) -> Response:
         """
@@ -45,3 +52,16 @@ def build_users_gateway_http_client() -> UsersGatewayHTTPClient:
     :return: Готовый к использованию UsersGatewayHTTPClient.
     """
     return UsersGatewayHTTPClient(client=build_gateway_http_client())
+
+
+def build_users_gateway_locust_http_client(environment: Environment) -> UsersGatewayHTTPClient:
+    """
+    Функция создает экземпляр UsersGatewayHTTPClient адаптированный под Locust.
+
+    Клиент автоматически собирает метрики и передает их в Locust через хуки.
+    Используется исключительно в нагрузочных тестах
+
+    :param environment: объект окружения Locust
+    :return: Экземпляр UsersGatewayHTTPClient с хуком сбора метрик.
+    """
+    return UsersGatewayHTTPClient(client=build_gateway_locust_http_client(environment=environment))
