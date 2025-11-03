@@ -230,7 +230,7 @@ def build_operations_gateway_http_client() -> OperationsGatewayHTTPClient:
     return OperationsGatewayHTTPClient(client=build_gateway_http_client())
 
 
-def build_account_gateway_locust_http_client(environment: Environment) -> OperationsGatewayHTTPClient:
+def build_operations_gateway_locust_http_client(environment: Environment) -> OperationsGatewayHTTPClient:
     """
     Функция создает экземпляр OperationsGatewayHTTPClient адаптированный под Locust.
 
