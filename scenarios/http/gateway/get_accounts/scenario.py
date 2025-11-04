@@ -1,8 +1,9 @@
-from locust import User, between, task
+from locust import task
 
 from clients.http.gateway.accounts.schema import OpenDepositAccountResponseSchema
 from clients.http.gateway.locust import GatewayHTTPSequentialTaskSet
 from clients.http.gateway.users.schema import CreateUserResponseSchema
+from tools.locust.user import LocustBaseUser
 
 
 class GetAccountsTaskSet(GatewayHTTPSequentialTaskSet):
@@ -29,7 +30,5 @@ class GetAccountsTaskSet(GatewayHTTPSequentialTaskSet):
         self.accounts_gateway_client.get_accounts(user_id=self.create_user_response.user.id)
 
 
-class GetAccountsUser(User):
-    host = "localhost"
+class GetAccountsUser(LocustBaseUser):
     tasks = [GetAccountsTaskSet]
-    wait_time = between(1, 3)
