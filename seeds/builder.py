@@ -22,6 +22,7 @@ class SeedsBuilder:
     accounts_gateway_client: клиент для работы со счетами
     operations_gateway_client: клиент для работы с операциями
     """
+
     def __init__(
             self,
             users_gateway_client: UsersGatewayGRPCClient | UsersGatewayHTTPClient,
@@ -71,6 +72,38 @@ class SeedsBuilder:
         )
         return SeedCardResult(card_id=response.card.id)
 
+    def build_transfer_operation_result(self, card_id: str, account_id: str) -> SeedOperationResult:
+        """
+        Выполняет операцию перевода.
+
+        :param card_id: Идентификатор карты
+        :param account_id: Идентификатор аккаунта
+        :return:
+            SeedOperationResult: Результат с идентификатором операции
+        """
+
+        response = self.operations_gateway_client.make_transfer_operation(
+            card_id=card_id,
+            account_id=account_id
+        )
+        return SeedOperationResult(operation_id=response.operation.id)
+
+    def build_cash_withdrawal_operation_result(self, card_id: str, account_id: str) -> SeedOperationResult:
+        """
+        Выполняет операцию снятия средств.
+
+        :param card_id: Идентификатор карты
+        :param account_id: Идентификатор аккаунта
+        :return:
+            SeedOperationResult: Результат с идентификатором операции
+        """
+
+        response = self.operations_gateway_client.make_cash_withdrawal_operation(
+            card_id=card_id,
+            account_id=account_id
+        )
+        return SeedOperationResult(operation_id=response.operation.id)
+
     def build_top_up_operation_result(self, card_id: str, account_id: str) -> SeedOperationResult:
         """
         Выполняет операцию пополнения.
@@ -102,6 +135,21 @@ class SeedsBuilder:
         )
         return SeedOperationResult(operation_id=response.operation.id)
 
+    def build_virtual_card_result(self, user_id: str, account_id: str) -> SeedCardResult:
+        """
+        Выполняет выпуск виртуальной карты
+
+        :param user_id: Идентификатор пользователя
+        :param account_id: Идентификатор счета
+        :return:
+            SeedCardResult: Результат с идентификатором карты
+        """
+        response = self.cards_gateway_client.issue_physical_card(
+            user_id=user_id,
+            account_id=account_id
+        )
+        return SeedCardResult(card_id=response.card.id)
+
     def build_debit_card_accounts_result(self, user_id: str, plan: SeedAccountsPlan) -> SeedAccountResult:
         """
         Открывает дебетовый счет и выполняет действия согласно плану:
@@ -131,7 +179,19 @@ class SeedsBuilder:
             purchase_operations=[
                 self.build_purchase_operation_result(card_id=card_id, account_id=account_id)
                 for _ in range(plan.purchase_operations.count)
-            ]
+            ],
+            virtual_card=[
+                self.build_virtual_card_result(user_id=user_id, account_id=account_id)
+                for _ in range(plan.virtual_card.count)
+            ],
+            transfer_operations=[
+                self.build_transfer_operation_result(card_id=card_id, account_id=account_id)
+                for _ in range(plan.top_up_operations.count)
+            ],
+            cash_withdrawal_operations=[
+                self.build_cash_withdrawal_operation_result(card_id=card_id, account_id=account_id)
+                for _ in range(plan.top_up_operations.count)
+            ],
         )
 
     def build_credit_card_accounts_result(self, user_id: str, plan: SeedAccountsPlan) -> SeedAccountResult:
@@ -163,7 +223,19 @@ class SeedsBuilder:
             purchase_operations=[
                 self.build_purchase_operation_result(card_id=card_id, account_id=account_id)
                 for _ in range(plan.purchase_operations.count)
-            ]
+            ],
+            virtual_card=[
+                self.build_virtual_card_result(user_id=user_id, account_id=account_id)
+                for _ in range(plan.virtual_card.count)
+            ],
+            transfer_operations=[
+                self.build_transfer_operation_result(card_id=card_id, account_id=account_id)
+                for _ in range(plan.top_up_operations.count)
+            ],
+            cash_withdrawal_operations=[
+                self.build_cash_withdrawal_operation_result(card_id=card_id, account_id=account_id)
+                for _ in range(plan.top_up_operations.count)
+            ],
         )
 
     def build_user(self, plan: SeedUsersPlan) -> SeedUserResult:

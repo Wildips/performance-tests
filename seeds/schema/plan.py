@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 
 
-class SeedACardsPlan(BaseModel):
+class SeedCardsPlan(BaseModel):
     """
     План генерации карт на счете.
 
@@ -25,14 +25,15 @@ class SeedAccountsPlan(BaseModel):
 
     Attributes:
         count (int): Количество счетов данного типа.
-        physical_card (SeedACardsPlan): План по созданию физических карт на счетах.
+        physical_card (SeedCardsPlan): План по созданию физических карт на счетах.
         top_up_operations (SeedOperationsPlan): План по созданию операций пополнения.
         purchase_operations (SeedOperationsPlan): План по созданию операций покупки.
     """
     count: int = 0
-    physical_card: SeedACardsPlan = Field(default_factory=SeedACardsPlan)
+    physical_card: SeedCardsPlan = Field(default_factory=SeedCardsPlan)
     top_up_operations: SeedOperationsPlan = Field(default_factory=SeedOperationsPlan)
     purchase_operations: SeedOperationsPlan = Field(default_factory=SeedOperationsPlan)
+    virtual_cards: SeedCardsPlan = Field(default_factory=SeedCardsPlan)
 
 
 class SeedUsersPlan(BaseModel):
@@ -51,6 +52,8 @@ class SeedUsersPlan(BaseModel):
     savings_accounts: SeedAccountsPlan = Field(default_factory=SeedAccountsPlan)
     debit_card_accounts: SeedAccountsPlan = Field(default_factory=SeedAccountsPlan)
     credit_card_accounts: SeedAccountsPlan = Field(default_factory=SeedAccountsPlan)
+    transfer_operations: SeedOperationsPlan = Field(default_factory=SeedOperationsPlan)
+    cash_withdrawal_operations: SeedOperationsPlan = Field(default_factory=SeedOperationsPlan)
 
 
 class SeedsPlan(BaseModel):
