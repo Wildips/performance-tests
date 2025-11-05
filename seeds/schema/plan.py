@@ -3,18 +3,20 @@ from pydantic import BaseModel, Field
 
 class SeedCardsPlan(BaseModel):
     """
-    План генерации карт на счете.
+    План генерации карт на счёте.
 
-    Attributes: count (int): Количество карт (виртуальных или физических), которые нужно создать.
+    Attributes:
+        count (int): Количество карт (виртуальных или физических), которые нужно создать.
     """
     count: int = 0
 
 
 class SeedOperationsPlan(BaseModel):
     """
-    План генерации операций на счете.
+    План генерации операций на счёте.
 
-    Attributes: count (int): Количество операций (например, пополнений или покупок), которые нужно сгенерировать.
+    Attributes:
+        count (int): Количество операций (например, пополнений или покупок), которые нужно сгенерировать.
     """
     count: int = 0
 
@@ -25,20 +27,22 @@ class SeedAccountsPlan(BaseModel):
 
     Attributes:
         count (int): Количество счетов данного типа.
-        physical_card (SeedCardsPlan): План по созданию физических карт на счетах.
+        physical_cards (SeedCardsPlan): План по созданию физических карт на счётах.
         top_up_operations (SeedOperationsPlan): План по созданию операций пополнения.
         purchase_operations (SeedOperationsPlan): План по созданию операций покупки.
     """
     count: int = 0
-    physical_card: SeedCardsPlan = Field(default_factory=SeedCardsPlan)
+    physical_cards: SeedCardsPlan = Field(default_factory=SeedCardsPlan)
     top_up_operations: SeedOperationsPlan = Field(default_factory=SeedOperationsPlan)
     purchase_operations: SeedOperationsPlan = Field(default_factory=SeedOperationsPlan)
     virtual_cards: SeedCardsPlan = Field(default_factory=SeedCardsPlan)
+    transfer_operations: SeedOperationsPlan = Field(default_factory=SeedOperationsPlan)
+    cash_withdrawal_operations: SeedOperationsPlan = Field(default_factory=SeedOperationsPlan)
 
 
 class SeedUsersPlan(BaseModel):
     """
-    План по созданию пользователей и их счетов разных типов.
+    План генерации пользователей и их счетов разных типов.
 
     Attributes:
         count (int): Количество пользователей.
@@ -58,9 +62,9 @@ class SeedUsersPlan(BaseModel):
 
 class SeedsPlan(BaseModel):
     """
-    Главная модель пана сидинга.
+    Главная модель плана сидинга.
 
     Attributes:
-        users (SeedUsersPlan): План по созданию пользователей и всей связанно структуры.
+        users (SeedUsersPlan): План по созданию пользователей и всей связанной структуры.
     """
     users: SeedUsersPlan = Field(default_factory=SeedUsersPlan)

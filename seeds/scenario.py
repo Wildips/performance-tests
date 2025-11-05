@@ -11,6 +11,7 @@ class SeedsScenario(ABC):
     Абстрактный класс для работы со сценариями сидинга.
     Этот класс инкапсулирует общую логику генерации, сохранения и загрузки данных для тестов.
     """
+
     def __init__(self):
         """
         Инициализация класса SeedsScenario.
@@ -31,9 +32,9 @@ class SeedsScenario(ABC):
     @abstractmethod
     def scenario(self) -> str:
         """
-         Абстрактное свойство для получения имени сценария сидинга.
-         Должно быть переопределено в дочерних классах.
-         """
+        Абстрактное свойство для получения имени сценария сидинга.
+        Должно быть переопределено в дочерних классах.
+        """
         ...
 
     def save(self, result: SeedsResult) -> None:
@@ -54,5 +55,5 @@ class SeedsScenario(ABC):
         """
         Генерирует данные с помощью билдера, используя план сидинга, и сохраняет результат.
         """
-        result = self.builder.build(plan=self.plan)
-        self.save(result=result)
+        result = self.builder.build(self.plan)
+        self.save(result)

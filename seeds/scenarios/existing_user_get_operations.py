@@ -13,8 +13,8 @@ class ExistingUserGetOperationsSeedsScenario(SeedsScenario):
                     count=1,
                     top_up_operations=SeedOperationsPlan(count=1),
                     purchase_operations=SeedOperationsPlan(count=5),
-                ),
-                cash_withdrawal_operations=SeedOperationsPlan(count=1)
+                    cash_withdrawal_operations=SeedOperationsPlan(count=1)
+                )
             ),
         )
 
