@@ -144,7 +144,7 @@ class SeedsBuilder:
         :return:
             SeedCardResult: Результат с идентификатором карты
         """
-        response = self.cards_gateway_client.issue_physical_card(
+        response = self.cards_gateway_client.issue_virtual_card(
             user_id=user_id,
             account_id=account_id
         )
@@ -180,9 +180,9 @@ class SeedsBuilder:
                 self.build_purchase_operation_result(card_id=card_id, account_id=account_id)
                 for _ in range(plan.purchase_operations.count)
             ],
-            virtual_card=[
+            virtual_cards=[
                 self.build_virtual_card_result(user_id=user_id, account_id=account_id)
-                for _ in range(plan.virtual_card.count)
+                for _ in range(plan.virtual_cards.count)
             ],
             transfer_operations=[
                 self.build_transfer_operation_result(card_id=card_id, account_id=account_id)
@@ -224,9 +224,9 @@ class SeedsBuilder:
                 self.build_purchase_operation_result(card_id=card_id, account_id=account_id)
                 for _ in range(plan.purchase_operations.count)
             ],
-            virtual_card=[
+            virtual_cards=[
                 self.build_virtual_card_result(user_id=user_id, account_id=account_id)
-                for _ in range(plan.virtual_card.count)
+                for _ in range(plan.virtual_cards.count)
             ],
             transfer_operations=[
                 self.build_transfer_operation_result(card_id=card_id, account_id=account_id)
