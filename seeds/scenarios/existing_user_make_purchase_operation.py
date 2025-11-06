@@ -19,7 +19,7 @@ class ExistingUserMakePurchaseOperationSeedsScenario(SeedsScenario):
                 count=300,
                 credit_card_accounts=SeedAccountsPlan(
                     count=1,
-                    physical_card=SeedCardsPlan(
+                    physical_cards=SeedCardsPlan(
                         count=1
                     )
                 )
