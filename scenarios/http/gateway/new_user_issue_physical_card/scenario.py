@@ -34,5 +34,5 @@ class IssuePhysicalCardSequentialTaskSet(GatewayHTTPSequentialTaskSet):
         )
 
 
-class GetAccountsUser(LocustBaseUser):
+class IssuePhysicalCardsUser(LocustBaseUser):
     tasks = [IssuePhysicalCardSequentialTaskSet]
