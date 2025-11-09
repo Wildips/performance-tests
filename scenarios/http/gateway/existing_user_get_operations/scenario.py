@@ -51,5 +51,5 @@ class GetOperationsTaskSet(GatewayHTTPTaskSet):
         )
 
 
-class GetAccountsUser(LocustBaseUser):
+class GetOperationsUser(LocustBaseUser):
     tasks = [GetOperationsTaskSet]
