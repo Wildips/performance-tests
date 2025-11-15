@@ -7,11 +7,12 @@ from clients.http.gateway.users.schema import (
     GetUserResponseSchema,
     CreateUserRequestSchema,
     CreateUserResponseSchema)
+from tools.routes import APIRoutes
 
 
 class UsersGatewayHTTPClient(HTTPClient):
-    """
-    Клиент для взаимодействия с /api/v1/users сервиса http-gateway
+    f"""
+    Клиент для взаимодействия с {APIRoutes.USERS} сервиса http-gateway
     """
 
     def get_user_api(self, user_id: str) -> Response:
@@ -22,8 +23,8 @@ class UsersGatewayHTTPClient(HTTPClient):
         :return: Ответ от сервера (объект httpx.Response)
         """
         return self.get(
-            f"/api/v1/users/{user_id}",
-            extensions=HTTPClientExtensions(route="/api/v1/users/{user_id}")
+            url=f"{APIRoutes.USERS}{user_id}",
+            extensions=HTTPClientExtensions(route=f"{APIRoutes.USERS}{{user_id}}")
         )
 
     def create_user_api(self, request: CreateUserRequestSchema) -> Response:
@@ -33,7 +34,7 @@ class UsersGatewayHTTPClient(HTTPClient):
         :param request: Словарь с данными нового пользователя
         :return: Ответ от сервера (объект httpx.Response)
         """
-        return self.post("/api/v1/users", json=request.model_dump(by_alias=True))
+        return self.post(f"{APIRoutes.USERS}", json=request.model_dump(by_alias=True))
 
     def get_user(self, user_id: str) -> GetUserResponseSchema:
         response = self.get_user_api(user_id)

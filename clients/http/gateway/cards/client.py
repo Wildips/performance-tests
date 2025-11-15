@@ -9,11 +9,12 @@ from clients.http.gateway.cards.schema import (
     IssuePhysicalCardResponseSchema
 )
 from clients.http.gateway.client import build_gateway_http_client, build_gateway_locust_http_client
+from tools.routes import APIRoutes
 
 
 class CardsGatewayHTTPClient(HTTPClient):
-    """
-    Клиент для взаимодействия с /api/v1/cards сервиса http-gateway
+    f"""
+    Клиент для взаимодействия с {APIRoutes.CARDS} сервиса http-gateway
     """
 
     def issue_virtual_card_api(self, request: IssueVirtualCardRequestSchema) -> Response:
@@ -23,7 +24,8 @@ class CardsGatewayHTTPClient(HTTPClient):
         :param request: Словарь с данными виртуальной карты
         :return: Ответ от сервера (объект httpx.Response)
         """
-        return self.post(f"/api/v1/cards/issue-virtual-card", json=request.model_dump(by_alias=True))
+
+        return self.post(f"{APIRoutes.USERS}/issue-virtual-card", json=request.model_dump(by_alias=True))
 
     def issue_physical_card_api(self, request: IssuePhysicalCardRequestSchema) -> Response:
         """
@@ -32,7 +34,7 @@ class CardsGatewayHTTPClient(HTTPClient):
         :param request: Словарь с данными физической карты
         :return: Ответ от сервера (объект httpx.Response)
         """
-        return self.post("/api/v1/cards/issue-physical-card", json=request.model_dump(by_alias=True))
+        return self.post(f"{APIRoutes.USERS}/issue-physical-card", json=request.model_dump(by_alias=True))
 
     def issue_virtual_card(self, user_id: str, account_id: str) -> IssueVirtualCardResponseSchema:
         request = IssueVirtualCardRequestSchema(
