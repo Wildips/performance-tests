@@ -45,7 +45,7 @@ jobs:
         run: git clone https://github.com/Wildips/performance-qa-engineer-course.git
 
       - name: Build base Docker image
-        run: docker build -f Docker.base -t base-service .
+        run: docker build -f Dockerfile.base -t base-service .
         working-directory: performance-qa-engineer-course
 
       - name: Start test services
