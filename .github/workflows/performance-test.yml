@@ -16,7 +16,7 @@ on:
           - ./scenarios/grpc/gateway/new_user_get_documents/v1.0.conf
           - ./scenarios/grpc/gateway/new_user_issue_physical_card/v1.0.conf
           - ./scenarios/grpc/gateway/new_user_make_top_up_operation/v1.0.conf
-          # http сценарии
+          # http-сценарии
           - ./scenarios/http/gateway/existing_user_get_documents/v1.0.conf
           - ./scenarios/http/gateway/existing_user_get_operations/v1.0.conf
           - ./scenarios/http/gateway/existing_user_issue_virtual_card/v1.0.conf
@@ -25,7 +25,8 @@ on:
           - ./scenarios/http/gateway/new_user_get_documents/v1.0.conf
           - ./scenarios/http/gateway/new_user_issue_physical_card/v1.0.conf
           - ./scenarios/http/gateway/new_user_make_top_up_operation/v1.0.conf
-        description: 'Locust config files'
+        required: true
+        description: 'Locust config file'
 
 jobs:
   run-tests:
@@ -33,43 +34,54 @@ jobs:
     timeout-minutes: 30
 
     steps:
+      # 1. Клонируем репозиторий
       - name: Check out repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
-      - name: Set up python
-        uses: actions/setup-python@v6
+      # 2. Устанавливаем Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.13'
+          python-version: '3.12'
 
+      # 3. Клонируем репозиторий с урезанным docker-compose стендом
       - name: Clone test services
-        run: git clone https://github.com/Wildips/performance-qa-engineer-course.git
+        run: git clone https://github.com/Nikita-Filonov/performance-qa-engineer-course.git
 
+      # 4. Сборка базового образа
       - name: Build base Docker image
         run: docker build -f Dockerfile.base -t base-service .
         working-directory: performance-qa-engineer-course
 
+      # 5. Запускаем необходимые сервисы
       - name: Start test services
         run: docker compose -f docker-compose.ci.yaml up -d --build
         working-directory: performance-qa-engineer-course
 
+      # 6. Устанавливаем зависимости
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      # 7. Создаём папку для отчёта
       - name: Create report directory
         run: mkdir -p ./reports/${{ github.run_id }}
 
-      - name: Run load tests and generate report
+      # 8. Запускаем Locust и генерируем HTML-отчёт
+      - name: Run load tests and generate HTML report
         run: locust --config=${{ github.event.inputs.SCENARIO }} --html=./reports/${{ github.run_id }}/index.html
 
-      - name: Upload test report as artifact
+      # 9. Сохраняем отчёты как артефакт
+      - name: Upload reports artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: performance-report-${{ github.run_id }}
-          path: reports/${{ github.run_id }}/
-          retention-days: 30
+          name: performance-reports
+          path: reports/
+          retention-days: 1
 
+      # 10. Останавливаем сервисы
       - name: Stop test services
         if: always()
         run: docker compose -f docker-compose.ci.yaml down -v
@@ -81,28 +93,18 @@ jobs:
     if: always()
 
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v5
-
-      - name: Download test report artifact
+      # 1. Загружаем сохраненные отчёты
+      - name: Download reports artifact
         uses: actions/download-artifact@v4
         with:
-          name: performance-report-${{ github.run_id }}
+          name: performance-reports
           path: reports/
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-
-      - name: Upload artifact to GitHub Pages
-        uses: actions/upload-pages-artifact@v3
+      # 2. Публикуем отчёт на GitHub Pages
+      - name: Deploy HTML report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: reports/
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}  # Авторизация для push в gh-pages
-          keep_files: true  # Сохраняем предыдущие отчёты
-          publish_dir: reports  # Публикуем директорию reports
-          publish_branch: gh-pages  # На ветке gh-pages
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          keep_files: true
+          publish_dir: reports
+          publish_branch: gh-pages
