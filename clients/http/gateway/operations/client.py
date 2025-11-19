@@ -80,7 +80,7 @@ class OperationsGatewayHTTPClient(HTTPClient):
         """
         return self.get(
             f"{APIRoutes.OPERATIONS}/{operation_id}",
-            extensions=HTTPClientExtensions(route=f"{APIRoutes.OPERATIONS}/{operation_id}")
+            extensions=HTTPClientExtensions(route=f"{APIRoutes.OPERATIONS}/{{operation_id}}")
         )
 
     def make_fee_operation_api(self, request: MakeFeeOperationRequestSchema) -> Response:
@@ -117,7 +117,7 @@ class OperationsGatewayHTTPClient(HTTPClient):
         :param request: Словарь с данными операции перевода средств
         :return: Ответ от сервера (объект httpx.Response)
         """
-        return self.post(f"{{APIRoutes.OPERATIONS}}/make-transfer-operation", json=request.model_dump(by_alias=True))
+        return self.post(f"{APIRoutes.OPERATIONS}/make-transfer-operation", json=request.model_dump(by_alias=True))
 
     def make_purchase_operation_api(self, request: MakePurchaseOperationRequestSchema) -> Response:
         """

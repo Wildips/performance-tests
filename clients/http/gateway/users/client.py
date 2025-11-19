@@ -23,8 +23,8 @@ class UsersGatewayHTTPClient(HTTPClient):
         :return: Ответ от сервера (объект httpx.Response)
         """
         return self.get(
-            url=f"{APIRoutes.USERS}{user_id}",
-            extensions=HTTPClientExtensions(route=f"{APIRoutes.USERS}{{user_id}}")
+            url=f"{APIRoutes.USERS}/{user_id}",
+            extensions=HTTPClientExtensions(route=f"{APIRoutes.USERS}/{{user_id}}")
         )
 
     def create_user_api(self, request: CreateUserRequestSchema) -> Response:

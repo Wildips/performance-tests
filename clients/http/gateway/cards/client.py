@@ -25,7 +25,7 @@ class CardsGatewayHTTPClient(HTTPClient):
         :return: Ответ от сервера (объект httpx.Response)
         """
 
-        return self.post(f"{APIRoutes.USERS}/issue-virtual-card", json=request.model_dump(by_alias=True))
+        return self.post(f"{APIRoutes.CARDS}/issue-virtual-card", json=request.model_dump(by_alias=True))
 
     def issue_physical_card_api(self, request: IssuePhysicalCardRequestSchema) -> Response:
         """
@@ -34,7 +34,7 @@ class CardsGatewayHTTPClient(HTTPClient):
         :param request: Словарь с данными физической карты
         :return: Ответ от сервера (объект httpx.Response)
         """
-        return self.post(f"{APIRoutes.USERS}/issue-physical-card", json=request.model_dump(by_alias=True))
+        return self.post(f"{APIRoutes.CARDS}/issue-physical-card", json=request.model_dump(by_alias=True))
 
     def issue_virtual_card(self, user_id: str, account_id: str) -> IssueVirtualCardResponseSchema:
         request = IssueVirtualCardRequestSchema(
